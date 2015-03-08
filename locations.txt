@@ -1,0 +1,6 @@
+label	type	latlng
+bridge	location	30.043747,31.229464
+museum	location	30.047778,31.233333
+talaat harb	location	30.044939,31.23680
+Omar Makram	location	30.045360,31.23670
+tahrir	location	30.044422,31.235696

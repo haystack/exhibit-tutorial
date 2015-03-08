@@ -1,0 +1,70 @@
+<html>
+  <head>
+
+    <title>Jan. 2: The Battle for Tahrir Square</title>
+<!--    <script src="http://api.simile-widgets.org/exhibit/HEAD/exhibit-api.js"></script>
+    <link rel="exhibit-extension" href="http://api.simile-widgets.org/exhibit/HEAD/extensions/map/map-extension.js"/>
+    <link rel="exhibit-extension" href="http://api.simile-widgets.org/exhibit/HEAD/extensions/time/time-extension.js"/>-->
+
+    <script src="http://people.csail.mit.edu/karger/ExhibitK/api/exhibit-api.js"></script>
+    <link rel="exhibit-extension" href="http://people.csail.mit.edu/karger/ExhibitK/api/extensions/map/map-extension.js"/>
+    <link rel="exhibit-extension" href="http://people.csail.mit.edu/karger/ExhibitK/api/extensions/time/time-extension.js"/>
+
+    <link href="egypt.txt" data-ex-value-separator=";" rel="exhibit/data" type="text/tsv"/>
+
+
+    <link href="https://spreadsheets.google.com/feeds/list/0AhAtARHyRN5adGZKTWstczJvNjEyU1JEUGdsd1UwZ0E/od6/public/basic?alt=json-in-script" rel="exhibit/data" data-ex-converter="googleSpreadsheets" type="application/jsonp"/>
+
+
+    <link href="egypt-styles.css" type="text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+    <h1>Feb. 2: The Battle for Tahrir Square</h1>
+    <!-- <h2></h2> -->
+
+    <div data-ex-role="collection" data-ex-item-types="Item"></div>
+
+    <div data-ex-role="lens">
+      <div data-ex-content=".label"></div>
+    </div>
+    
+    <div id="options-wrapper">
+      <div id="options">
+	<div class="mode" data-ex-role="facet" data-ex-expression=".location" data-ex-show-missing="false" data-ex-height="150px"></div>
+	<div class="mode" data-ex-role="facet" data-ex-expression=".gender" data-ex-show-missing="false" data-ex-height="150px"></div>
+	<div class="mode" data-ex-role="facet" data-ex-expression=".role" data-ex-show-missing="false" data-ex-height="150px"></div>
+	<div class="mode" data-ex-role="facet" data-ex-expression=".username" data-ex-show-missing="false" data-ex-height="150px"></div>
+	<div data-ex-role="facet" data-ex-facet-label="action" data-ex-expression=".action" data-ex-show-missing="false" data-ex-height="150px"></div>
+	<div data-ex-role="facet" data-ex-expression=".emotion" data-ex-show-missing="false"></div>	
+      </div>
+    </div>
+
+    <div id="secondRow">
+      <div id="cloud">
+	<p class="topics">Text:</p>
+	<div data-ex-role="facet" data-ex-facet-class="TextSearch"></div>
+	<p class="topics">Topics:</p>
+	<div data-ex-role="facet" data-ex-expression=".keywords" data-ex-facet-class="Cloud" data-ex-show-missing="false"></div>
+      </div>
+      <div id="maps">
+	<div data-ex-role="viewPanel">
+	  <div data-ex-role="view" data-ex-view-class="Timeline" data-ex-start=".time" data-ex-color-key=".username" data-ex-top-band-unit="minute" data-ex-top-band-pixels-per-unit="90" data-ex-bottom-band-pixels-per-unit="400">
+	    <div data-ex-role="lens">
+	      <span data-ex-content=".hour"></span>: <span data-ex-content=".label"></span>
+	    </div>
+	  </div>
+	  <div data-ex-role="view" data-ex-view-class="Map" data-ex-latlng=".location.latlng" data-ex-zoom="16" data-ex-center="30.044939,31.23680" >
+	    <div data-ex-role="lens">
+	      <a class="hoverOver" data-ex-href-content=".url"><div data-ex-content=".label"></div></a>
+	      <b>Topics:</b> <span data-ex-content=".keywords"></span>
+	      <br/><br/>
+	    </div>
+	  </div>
+	  <div data-ex-role="view" data-ex-label="List" data-ex-orders=".hour" data-ex-possible-orders=".action,.date,.emotion,.gender,.hour,.location,.role,.username"></div>
+	  <div data-ex-role="view" data-ex-label="Table" data-ex-view-class="Tabular" data-ex-columns=".username,.role,.location,.label"></div>
+	</div>
+      </div>
+    </div>
+  </body>
+</html>

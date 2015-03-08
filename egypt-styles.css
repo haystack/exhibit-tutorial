@@ -1,0 +1,106 @@
+body {
+	background-color: white;
+}
+
+h1 {
+	font-family: Arial;
+	width: 1024px;
+	margin: 0 auto;
+	padding: 10px 0px 10px 20px;
+}
+
+#options {
+    height: 200px;
+    margin: 0 auto;
+    position: relative;
+	width: 1024px;
+    margin-bottom: 20px;
+    padding-top:10px;
+}
+
+#secondRow {
+    margin: 0 auto;
+    position: relative;
+    width: 1024px;
+}
+
+#maps {
+	width: 710px;
+	padding-left: 14px;
+	float: left;
+    position: relative;
+    height: 280px;
+}
+
+div.exhibit-facet {
+    float: left;
+    font-size: 15px;
+    padding: 4px;
+    position: relative;
+    width: 160px;
+}
+
+#options-wrapper {
+    background-color: #EEEEEE;
+    border-bottom: 1px solid #DDDDDD;
+    border-top: 1px solid #DDDDDD;
+    height: 203px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+a.hoverOver:link, a.hoverOver:visited {
+	text-decoration: none;
+} 
+
+a.hoverOver:hover{
+	text-decoration: underline;
+}
+
+.hidden {
+	display: none;
+}
+
+.exhibit-views-bubbleWithItems{
+	height: 200px;
+}
+
+.exhibit-resizableDivWidget-resizer{
+	display: none;
+}
+
+#cloud {
+	position: relative;
+	float: left;
+	width: 300px;
+}
+
+div.exhibit-views-header{
+	display: none;
+}
+
+div.exhibit-viewPanel-viewSelection {
+    padding-bottom: 6px;
+    text-align: center;
+}
+
+.topics {
+    font-family: Times New Roman;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+    padding-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.timeline-event-label {
+	font-size: 13px;
+	width: 350px;
+	overflow: hidden;
+	height: 18px;
+}
+
+div.timeline-event-label:after {
+	width: 10px;
+	content: "...";
+}

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CAR Hands-on: Simile Exhibit Framework</title>
+    <script src="http://api.simile-widgets.org/exhibit/HEAD/exhibit-api.js"></script>
+    <link rel="exhibit-extension" href="http://api.simile-widgets.org/exhibit/HEAD/extensions/map/map-extension.js"/>
+    <link rel="exhibit-extension" href="http://api.simile-widgets.org/exhibit/HEAD/extensions/time/time-extension.js"/>
+    <style>
+      table#main { 
+      border-spacing: 20px;
+      vertical-align:top;
+      }
+      td.example {
+      vertical-align:top;
+      overflow:auto;
+      width: 75%;
+      }
+      td.narrative {
+      vertical-align:top;
+      }
+      div.example {
+      height:500px;
+      overflow:auto;
+      }
+      
+    </style>
+
+    <link href="egypt.txt" data-ex-value-separator=";" rel="exhibit/data" 	  type="text/tsv"/>
+
+    <link href="locations.txt" rel="exhibit/data" type="text/tsv"/>
+  </head>
+  <body>
+    <H1>CAR Hand-on: Simile Exhibit Framework</H1>
+    <h2>
+      What is Exhibit?
+    </h2>
+
+
+    Welcome!  This is a hands-on tutorial from CAR 2012 on
+    producing <a href="egypt.html">this exhibit</a>.  This document     will
+    walk you through all the steps needed to create it.      Alternatively,
+    you can download <a href="hands-on.zip">this zip file</a> which
+    contains all the relevant documents and work through them locally.
+
+
+    <div data-ex-role="collection" data-ex-item-types="Item"></div>
+
+    <h3>New Visualization Tags for your HTML</h3>
+
+    The idea behind         <a href="http://simile-widgets.org/exhibit">Exhibit</a> is that         putting a map or a sortable list or a timeline into your web page         shouldn't be a hard programming problem, but rather a simple part of         authoring your article.  Exhibit lets you incorporate tabular         data---spreadsheets---into your web pages.  Then it defines a bunch of         new tags---like &lt;map&gt;, &lt;timeline&gt;, and         &lt;facet&gt;---that you can drop into your html documents.  You         attach them to the data the same way you make charts in excel: by         specifying the data columns that contain the coordinates, dates, or         attributes for the visualizations.  Anyone visiting the page will see         and interact with all the rich visuals you specified with the tags.
+    <h3>No Installation</h3>
+    There is no software to install.  Exhibit is implemented as an         open source javascript library you just include in your web page.          Because it works entirely on the client browser, it can be integrated         into whatever CMS you are using.
+
+    <h3>Think Small</h3>
+    Exhibit is designed for small data sets.  It's perfect for showing         a thousand items.  If you have a few thousand, it will still work fine         but will start to slow down.  Some exhibits have been created with as         many as 30,000 items.  The Library of Congress has funded development         of <a href="http://simile-widgets.org/exhibit3">Exhibit 3</a> to scale         Exhibit up to hundreds of thousands of items.  
+
+    <h3>What you need to know for this walkthrough</h3>
+    Exhibit is a bunch of new html tags---tags that WYSIWYG html         editors don't know.  The most direct way to edit an exhibit is to edit         the HTML source directly (or copy someone else's).  That's what we'll         focus on in this hands-on.  We have projects under way to make         authoring easier: our         <a href="http://projects.csail.mit.edu/datapress">Datapress</a>         project provides a wordpress extension that lets you WYSIWYG edit your         exhibit into a blog post, and         <a href="http://projects.csail.mit.edu/exhibit/Dido">Dido</a> is a         (still experimental) standalong WYSIWYG editor for exhibits.
+
+    <h2>Walkthrough</h2>
+
+    In this walkthrough, we're going to
+    create <a href="egypt.html" target="result">this visualization</a>         of a bunch of
+    tweets curated by Andy Carvin during the Tahrir Square riots.  We
+    originally produced this Exhibit, together with Sisi Wei of the
+    Washington Post, at an ONA Hackathon in Boston.
+
+    <table id="main">
+      <tr>
+	<td>
+	  <h3>Add the Script</h3>
+	</td>
+      </tr>
+      <tr>
+	<td class="narrative">
+	  To begin using exhibit, you need to put a link to the 	  Exhibit library in the head of your html document:
+	  <p>
+	    <code>
+	      &lt;script 	      	      href=&quot;http://trunk.simile-widgets.org/exhibit/api/exhibit-api.js&quot; 	      &gt;&lt;/script&gt;
+	    </code>
+	  <p>
+	    Right now, it won't do anything.
+	</td>
+      </tr>
+      
+      <tr>
+	<td>  <h3>Plan Your Data</h3> </td>
+      </tr>
+
+      <tr>
+	<td  class="narrative">
+	  <div class="narrative">
+	    To make an Exhibit you need some data.  Tabular 	    (spreadsheet) data is a good starting point.  We generally 	    think of each data row as describing an <b>Item</b>.  Each 	    column describes a different named <b>property</b> of the 	    item.  You'll want a header row in your table, giving the 	    names of these properties.  The entries in the cells 	    provide <b>values</b> for the various properties of the 	    item.  These values can be numbers, strings, dates, etc.
+	    <p>
+	      Exhibit imposes few restrictions on your data.  It does 	      require that each item have a <b>label</b> to identify 	      it. Make sure that one of your columns headings is 	      "label" and you'll be fine.  Exhibit 	      <b>distinguishes</b> items by their label, so if you 	      give two items the same label, Exhibit will think you 	      are talking about the same item twice and <b>merge</b> 	      their properties.  So make sure labels are distinct!
+	    <p>
+	      For this demonstration we're going to work with a 	      collection of Tweets curated by Andy Carvin during the 	      Tahrir Square Arab-Spring riots in Egypt.  You can see 	      this collection the 	      <a href="https://docs.google.com/spreadsheet/pub?key=0AhAtARHyRN5adFBTczRpMktmS3BPU0lpRVBWenhCV3c&output=html">Google 		Spreadsheet</a> to the right.  Notice that we have one 	      row per tweet, and column heading naming the particular 	      properties like date, label, url, and username.  Looking 	      further to the right, notice that in "keywords" column 	      there are multiple values separated by semicolons. 	      Exhibit knows to break those up (and allows items to 	      have multiple values for a property).
+	  </div>
+	<td class="example">
+	   	  <iframe src="https://docs.google.com/spreadsheet/pub?key=0AhAtARHyRN5adFBTczRpMktmS3BPU0lpRVBWenhCV3c&output=html" 		  width="100%" height="400px" 		  style="overflow:auto"></iframe>
+
+      </tr>
+      <tr>
+	<td><h3>Link to Your Data</h3></td>
+      </tr>
+      <tr>
+	<td  class="narrative">
+	  Exhibit can read a variety of tabular data formats, 	  including TSV and CSV.  Exhibit's "native" format is JSON, a standard 	  representation of data on the web.  It can read some XML formats. 	  Using <a href="http://service.simile-widgets.org/babel">Babel</a>, you 	  can translate certain other formats, such as excel spreadsheets, into 	  Exhibit json.  Exhibit can also directly read from Google Spreadsheets 	  (giving you the ability to dynamically udpdate the data in your 	  presentation).  In general, web security features require that your 	  data file be on the <b>same web site</b> as your Exhibit html 	  document.  Google Spreadsheets uses a special technique called 	  <b>JSONP</b> to get around this restriction.  Your data providers can 	  use it too but it requires learning.
+	  <p>
+	    For this hands-on, we've provided a 	    <a href="egypt.txt">TSV file</a> 	    and a 	    <a href="egypt.js">JSON file</a> that you can see to the right.  	    Either one will do to provide the data.
+	  <p>
+	    To tell Exhibit about your data, you put a link to it in 	    the head of your document.  To link to the tsv file, we 	    write
+	  <p>
+	    <code>
+	      &lt;link rel=&quot;exhibit/data&quot; 	      	      type=&quot;text/tsv&quot;  data-ex-value-separator=";" 	      	      href=&quot;egypt.txt&quot;/&gt;
+	    </code>
+	  <p>
+	    (The <code>ex:valueSeparator</code> tells Exhibit that 	    fields 	    containing semicolons should be split into multiple 	    values.  You can 	    leave it out if you don't need to split 	    fields.)  If you want to link 	    to the json instead you can write:
+	  <p>
+	    <code>
+	      &lt;link rel=&quot;exhibit/data&quot; 	      	      type=&quot;text/tsv&quot;<br> href=&quot;egypt.txt&quot;/&gt;<br>
+	    </code>
+	  <p>
+	    Either will do.  Note that you need to specify the format 	    of the file as a "type" argument.  If you want to link 	    directly to a 	    Google Spreadsheet, see the discussion at the end 	    of this tutorial. 
+	  <p>
+	    Exhibit has only limited ability to handle errors in the 	    input data 	    files.  For example, a stray quotation mark in our 	    tweets TSV file 	    will lead Exhibit to treat the data 	    following it as a quoted 	    string---likely not what you want.  	    And Exhibit is not particularly 	    good about reporting error 	    messages.  The best support is provided 	    with the JSON 	    format, where we provide a 	    	    <a href="http://service.simile-widgets.org/babel/validator">validation 	      service</a> that tells you if you have any syntax errors 	    in your data 	    file.
+
+	    <td class="example">
+	      <h3>TSV file</h3>
+	      <iframe src="egypt.txt" width="100%" height="250px" 		      style="overflow:auto"></iframe>
+	      <h3>JSON file</h3>
+	      <iframe src="egypt.js" width="100%" height="250px" 		      style="overflow:auto"></iframe>
+	    </td>
+      </tr>
+
+      <tr>
+	<td>
+	  <h3>Views</h3>
+	</td>
+      </tr>
+
+      <tr>
+	<td  class="narrative">
+	  We've linked to the data, but we haven't yet told Exhibit 	  how and where in the page we want to <b>see</b> it.  Exhibit 	  expects 	  us to specify some <b>views</b> of the data.  	  Exhibit offers many 	  types of views---lists, thumbnail galleries, 	  maps, timelines, and 	  charts. We'll begin with the default, the 	  "list of items" view.  To 	  produce this, we place a "view" tag 	  in the html wherever we want that 	  view to appear:
+	  <p>
+	    <code>
+	      &lt;div data-ex-role=&quot;view&quot;&gt;&lt;/div&gt;
+	    </code>
+	  <p>
+	    You can look at the resulting Exhibit 	    	    <a href="egypt0.html" target="result">here</a>.  It isn't very 	    exciting yet because we haven't specialized the view.  But 	    it does 	    already present the data, and includes, at the 	    top, the ability to 	    <b>sort</b> the data by various 	    properties.  
+	</td>
+	<td class="example">
+	  <div class="example">
+	    <div data-ex-role="view"></div>
+	  </div>
+	</td>
+      </tr>
+
+      <tr>
+	<td><h3>Lenses</h3></td>
+      </tr>
+
+      <tr>
+	<td  class="narrative">
+	  The first improvement we'll make is in the way individual 	  items show in the list.  Right now, Exhibit is showing a 	  default view 	  of each item, listing all the properties and their 	  values.  We can 	  specialize this view using a <b>Lens</b>.  	  Lenses are 	  templates---pictures of how we want items to look.  	  We specify the 	  HTML that should present a single item, along with 	  "fill in the 	  blanks" instructions that say where to inject the 	  values of specific 	  properties of the displayed item.  Here's a 	  simple lens for the tweet 	  data:
+	  <p>
+	    <code>
+	      &lt;div data-ex-role=&quot;lens&quot;&gt;
+	      &lt;span data-ex-content=&quot;.hour&quot;&gt;&lt;/span&gt;: 
+	      &lt;span data-ex-content=&quot;.label&quot;&gt;&lt;/span&gt;
+	      &lt;/div&gt;
+	    </code>
+
+	  <p>
+	    This lens just shows the hour property, followed by a 	    colon and the label, which for this data set is just the 	    tweet itself.
+
+	  <p>
+	    We give Exhibit a lens template by writing a &lt;div&gt; 	    data-ex-role="lens" &lt;/div&gt; tag.  Inside this tag we write 	    the HTML of 	    the way we would like a single item to look.  When 	    we want to fill in 	    a blank with a particular property like 	    the label, we write &lt;span 	    	    data-ex-content=".label"&gt;&lt;/span&gt;.  Remember to put the period 	    before the property name.  
+	  <p>
+	    If you put your lens at the top level of your html 	    document, it will 	    be used by all the views in the document.  	    If you put the lens 	    <b>inside</b> the tag defining a 	    particular view, then the lens will 	    <b>only</b> be used in 	    that view.  This allows you to include 	    different lenses in 	    different views.
+
+	  <p>
+	    Adding this lens makes the tweets look much nicer, as you 	    can see <a href="egypt1.html" target="result">here</a>.
+
+	</td>
+	<td class="example">
+
+	  <div class="example">
+	    <div data-ex-role="view">
+	      <div data-ex-role="lens">
+		<span data-ex-content=".hour"></span>: 		<span data-ex-content=".label"></span>
+	      </div>
+	    </div>
+	  </div>
+	</td>
+      </tr>
+
+      <tr>
+	<td><h3>Sorting the List View</h3></td>
+      </tr>
+
+      <tr>
+	<td  class="narrative">
+	  Note that the list view has ordered the items alphabetically 	  by tweet, i.e. label.  This is the default, and isn't so 	  sensible in 	  this case.  We can change the order by adding an 	  <code>ex:orders</code> attribute to the view.  While we're 	  at it, we 	  can also specify which properties of the data are 	  useful for sorting 	  using <code>ex:possibleOrders</code>:
+	  <p>
+
+	    <code>
+	      &lt;div data-ex-role=&quot;view&quot; 	      	      data-ex-label=&quot;-list&quot;
+	      data-ex-orders=&quot;.username,.hour&quot;
+	      data-ex-possible-orders=&quot;.action,.date,.emotion, 	      	      .gender,.hour,.location,.role,.username&quot;&gt;&lt;/div&gt;
+	    </code>
+
+	  <p>
+	    If you load the <a href="egypt2.html" 			       target="result">resulting exhibit</a>, 	    you'll see that tweets are now 	    sorted (and grouped) by user, then 	    sub-sorted by hour.  You can list 	    several properties, 	    separated by commas, to sort by the first 	    property, then 	    break ties using the second property, and so forth.  	    Exhibit 	    also lets you specify whether to group together items with the 	    same value of the sort property under a common 	    header---ties are 	    grouped by default by you can override by 	    adding the 	    <code>ex:grouped="false"</code> attribute to the 	    view.
+	  <p>
+	    Users can change the sort order and grouping by clicking 	    on the header of the list view, but you can give them a 	    natural 	    starting order.
+	</td>
+	<td class="example">
+	  <div class="example">
+	    <div data-ex-role="view" data-ex-orders=".username,.hour" 	 		  		 data-ex-possible-orders=".action,.date,.emotion,.gender,.hour,.location,.role,.username">
+	      <div data-ex-role="lens">
+		<span data-ex-content=".hour"></span>: 		<span data-ex-content=".label"></span>
+	      </div>
+	    </div>
+	  </div>
+	</td>
+      </tr>
+
+      <tr>
+	<td>
+	  <h3>Tabular View</h3></td>
+      </tr>
+
+      <tr>
+	<td  class="narrative">
+	  We can add other views, again using the view tag but now 	  specifying the view type using the <code>viewClass</code> 	  attribute.  	  Like different kinds of charts in Excel, different 	  types of views need 	  different configuration options.  These 	  options are specified as 	  attributes of the view tag.  Let's 	  start with a tabular view.  This is 	  basically a normal table, 	  although Exhibit does give the user the 	  ability to sort the 	  table by clicking on the columns headings.
+	  <p>
+	    <code>
+	      &lt;div data-ex-role=&quot;view&quot; 	      	      data-ex-view-class=&quot;-tabular&quot; 	      	      data-ex-columns=&quot;.username,.role,.location,.label&quot
+	      data-ex-column-labels="Who,Role,Where?,Tweet";&gt;&lt;/div&gt;
+	    </code>
+	  <p>
+	    For the tabular view, the key is specifying which columns 	    to display 	    using a comma separated list of property names in 	    <code>ex:columns</code>.  Another option 	    <code>ex:columnLabels</code>, 	    lets you specify what goes in the 	    column headings.  There are many 	    other options to let you 	    style the different columns.
+	</td>
+	<td class="example">
+	  <div class="example">
+	    <div data-ex-role="view" data-ex-label="Table" 		 		 data-ex-view-class="Tabular" data-ex-columns=".username,.role,.location,.label" 		 data-ex-column-labels="Who,Role,Where?,Tweet"></div>
+	  </div>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <h3>Timeline</h3></td>
+      </tr>
+
+      <tr>
+	<td  class="narrative">
+	  Now let's place our items on a timeline.  To do that we need to     	  specify which properties define the start (and optionally end) points     	  of the  timeline position of the item.  We do so by placing the     	  attributes <code>ex:start</code> and (optionally) <code>ex:end</code>     	  in the view description.  We can also <code>color code</code> the     	  marks on the timeline to reflect some categorization, by setting the     	  <code>ex:colorKey</code> option.  Each of these options expects the     	  specification of a (period-prefixed) property name that should be     	  used.  We can also configure other natural quantities like the the     	  time-unit of the timeline tickmarks (minute, day, week, hour, year     	  etc.) on both the top and bottom bands of the timeline, as well as the     	  spacing of those tickmarks.  
+	  <p>
+	    <code>
+	      &lt;div data-ex-role=&quot;view&quot; 	      data-ex-view-class=&quot;-timeline&quot; data-ex-start=&quot;.time&quot; 	      data-ex-color-key=&quot;.username&quot; 	      data-ex-top-band-unit=&quot;minute&quot; 	      data-ex-top-band-pixels-per-unit=&quot;140&quot; 	      data-ex-bottom-band-pixels-per-unit=&quot;500&quot;&gt;
+	    </code>
+
+	  <p>
+	    The timeline view is an <b>extension</b> in exhibit; it       	    isn't automatically available.  You need to include another script in       	    the head of your document, after the main exhibit script, to provide       	    the new view:
+	  <p>
+	    <code>
+	      &lt;script 	      src=&quot;http://trunk.simile-widgets.org/exhibit/api/extensions/time/time-extension.js&quot;&gt;&lt;/script&gt;
+	    </code>
+
+	  <p>
+	    The timeline view is shown to the right.  If you click on       	    a particular item, you'll get a pop-up bubble with more detail.  The       	    bubble contents are determined by the lens associated with this view.
+
+	    If we add this timeline to our previous Exhibit, we get       	    <a href="egypt3.html">this one</a>
+	</td>
+	<td class="example">
+
+	  <div data-ex-role="view" data-ex-view-class="Timeline" data-ex-start=".time" 	       data-ex-color-key=".username" data-ex-top-band-unit="minute" 	 	       data-ex-top-band-pixels-per-unit="140" data-ex-bottom-band-pixels-per-unit="500">
+	    <div data-ex-role="lens">
+	      <span data-ex-content=".hour"></span>: 	      <span data-ex-content=".label"></span>
+	    </div>
+	  </div>
+	</td>
+      </tr>
+
+      <tr>
+	<td>
+	  <h3>View Panels</h3></td>
+      </tr>
+
+      <tr>
+	<td  class="narrative">
+	  With three views, the presentation is getting a little long.      	  We can pack things together using a <b>View Panel</b>.  The View Panel     	  gathers several views together, give each one a title, and lets the     	  user flip between them so that only one is occupying page space at a     	  time.  As usual, you define the view panel with an html tag:
+	  <p>
+	    <code>
+	      &lt;div data-ex-role=&quot;view-panel&quot;&gt;&lt;/div&gt;
+	    </code>
+
+	  <p>
+	    Take any views you want managed by the view panel, and put       	    their tags inside the viewPanel tag.   That's it!  You get the view       	    panel shown to the right.  You select views at the top.    You can see       	    the overall result in <a href="egypt4.html" target="result">this 	      exhibit</a>.  
+	  <p>
+	    You can mix any number of view panels with any number of       	    standalone views on the page.  One popular approach is to present one       	    "primary" view and then below it a view panel for switching among       	    secondary views.  Note that in the view-switching header each view is       	    named by its type.  If you have several views of the same type, or       	    just want more informative names, you can add an <code>ex:label</code>       	    attribute to each view that will override its name.
+	</td>
+	<td class="example">
+	  <div class="example">
+
+	    <div data-ex-role="viewPanel">
+	      <div data-ex-role="lens">
+		<span data-ex-content=".hour"></span>: 	  		<span data-ex-content=".label"></span>
+	      </div>
+	      <div data-ex-role="view" data-ex-view-class="Timeline" 	 	     		   data-ex-start=".time" data-ex-color-key=".username"  data-ex-time-line-height="350" 		   data-ex-top-band-pixels-per-unit="150" 	 	     		   data-ex-bottom-band-pixels-per-unit="400"></div>
+	      <div data-ex-role="view" data-ex-label="List" 	 	     		   data-ex-orders=".hour" 	 	     		   data-ex-possible-orders=".action,.data,.emotion,.gender,.hour,.location,.role,.username">
+	      </div>
+	      <div data-ex-role="view" data-ex-label="Table" 	     		   data-ex-view-class="Tabular" data-ex-columns=".username,.role,.location,.label" 		   data-ex-column-labels="Who,Role,Where?,Tweet"></div>
+	    </div>
+	  </div>
+	</td>
+      </tr>
+
+      <tr>
+	<td>
+	  <h3>Filtering with Facets</h3>
+      </tr>
+
+      <tr>
+	<td  class="narrative">
+	  Exhibit includes <b>facets</b> that can filter the data     being 	  displayed.  To specify a facet you specify the expression (e.g.     	  property) that should be used to filter, and optionally a facet type.      	  The default facet, the list facet, simply lists all values of the     	  property; clicking on a value filters down to the items that have the     	  chosen value on that property:
+	  <p>
+	    <code>
+	      &lt;div data-ex-role=&quot;facet&quot; 	      data-ex-expression=&quot;.location&quot; 	      data-ex-show-missing=&quot;false&quot; 	      data-ex-height=&quot;10px&quot;&gt;&lt;/div&gt;
+	    </code>
+	  <p>
+	    As usual, there are additional options.  Besides the       	    obvious "height" of the facet, <code>ex:showMissing</code> specifies       	    what to do about items that <i>don't have</i> a value for the       	    property. When set to false, those items simply don't participate in       	    the facet.  When set to true, the facet will include a selectable       	    "missing this value" option.
+	  <p>
+	    Besides the default list facet, there as a textsearch       	    facet that offers a textbox where the reader can type arbitrary text       	    that is matched against the content of the items.
+	  <p>
+	    <code>
+	      &lt;div data-ex-role=&quot;facet&quot; 	      data-ex-facet-class=&quot;-text-search&quot;&gt;&lt;/div&gt;
+	    </code>
+	    There is also a TagCloud facet type that displays values       	    in a tag cloud (larger ones are more common):
+	  <p>
+	    <code>
+	      &lt;div data-ex-role=&quot;facet&quot; 	      data-ex-expression=&quot;.keywords&quot; 	      data-ex-facet-class=&quot;-cloud&quot; 	      data-ex-show-missing=&quot;false&quot;&gt;&lt;/div&gt;
+	    </code>
+	  <p>
+	    For number-valued properties, there is a NumericRange       	    facet (lists of ranges of numbers) and Slider facet (slide to select       	    upper and lower limits for the number value).  We don't have uses for       	    those in this exhibit.
+
+	  <p>
+	    Adding a whole bunch of facets (and doing some standard       	    CSS discussed below to control how they get laid out) gives us       	    <a href="egypt5.html" target="result">this exhibit</a>; almost done!
+	    <td class="example">
+	      <div class="example">
+		<div data-ex-role="facet" data-ex-expression=".location" 	       		     data-ex-show-missing="false" data-ex-height="150px"></div>
+		<p class="topics">Text:</p>
+		<div data-ex-role="facet" data-ex-facet-class="TextSearch"></div>
+		<p class="topics">Topics:</p>
+		<div data-ex-role="facet" data-ex-expression=".keywords" 	       		     data-ex-facet-class="Cloud" data-ex-show-missing="false"></div>
+	      </div>
+	    </td>
+      </tr>
+
+      <tr>
+	<td>
+	  <h3>Chaining Properties; Map View</h3>
+	</td>
+      </tr>
+
+      <tr>
+	<td  class="narrative">
+	  We can similarly add a map as we did the timeline.   Like     the 	  timeline, maps need their own extension script added to the head:
+	  <p>
+	    <code>
+	      &lt;script 	      src=&quot;http://trunk.simile-widgets.org/exhibit/api/extensions/map/map-extension.js&quot;&gt;&lt;/script&gt;
+	    </code>
+
+	    For maps we need (at least) Latitude/Longitude data for       	    each item we want to plot, and that isn't available in our data set.        	    The simplest approach is to add a new column to the spreadsheet and       	    add a latitude and longitude for each item.
+	    But for Andy's tweets we've taken a different approach.        	    These tweets happened at four locations named in our data: tahrir,       	    talaat harb, museum, and Omar Makhram.  We are going to associate       	    latitude/longitude with those locations, then connect them back to the       	    specific tweets.  The latitude/longitude data is in another document,       	    either a <a href="locations.txt">tsv file</a> or a       	    <a href="https://docs.google.com/spreadsheet/pub?key=0AhAtARHyRN5adGZKTWstczJvNjEyU1JEUGdsd1UwZ0E&output=html">another 	      google spreadsheet</a>.  It uses the locations as labels and 	    gives       each of them a "latlng" property, as well as a type.  We 	    can include       this data in our Exhibit, either the tsv file:
+	  <p>
+	    <code>
+	      &lt;link href=&quot;locations.txt&quot; 	      rel=&quot;exhibit/data&quot; type=&quot;text/tsv&quot;/&gt;
+	    </code>
+	</td>
+	<td class="example">
+
+
+	  <iframe src="https://docs.google.com/spreadsheet/pub?key=0AhAtARHyRN5adGZKTWstczJvNjEyU1JEUGdsd1UwZ0E&output=html" 		  width="100%" height="400px" 		  style="overflow:auto"></iframe>
+
+	  
+	</td>
+      </tr>
+      <tr>
+	<td  class="narrative">
+	  
+	  Now that we've included the location data, here's the map     tag:
+	  <p>
+	    <code>
+	      &lt;div data-ex-role=&quot;view&quot; 	      data-ex-view-class=&quot;-map&quot; 	      data-ex-latlng=&quot;.location.latlng&quot; 	ex:zoom=&quot;16&quot; 	      data-ex-center=&quot;30.044939,31.23680&quot; 	      data-ex-top-band-pixels-per-unit=&quot;25px&quot;&gt;&lt;/div&gt;
+	    </code>
+	  <p>
+	    The most important option here specifies which latitude       	    and longitude define the placement of items on the map.   This option       	    contains something new: a <b>chain</b> of properties       	    ".location.latlng".  The way to read this is as follows: for the item       	    being displayed, look up its location.  That will give you the label       	    of another item (one of the four locations).  Look up the latlng       	    property of that item.  Exhibit lets you chain together arbitrary       	    sequences of properties.  Breaking up your data this way is useful       	    because now if you decide to update the latlng of a location you only       	    need to do it in one place, instead of changing the value for every       	    single item at that location.
+
+	  <p>
+	    There are also, as with the timeline, options to set the       	    initial center and zoom level of them map, to specify properties that       	    determine the color and size of icons on the map, or even to associate       	    an image or icon with each item that will show on the map---there's no       	    useful icon for this exhibit, but you can see an example in this       	    exhibit of       	    <a href="http://simile-widgets.org/exhibit/examples/presidents/presidents.html">U.S. 	      Presidents</a>
+
+	  <p>
+	    Once we've included the 4 "location" objects, they by       	    default become part of the data collection and get displayed in       	    various lists.  We don't want that.  We use the <b>collection</b> tag       	    to tell Exhibit which items we actually want to show in our views:
+	  <p>
+	    <code>
+	      &lt;div data-ex-role=&quot;collection&quot; 	      data-ex-item-types=&quot;-item&quot;&gt;&lt;/div&gt;
+	    </code>
+	  <p>
+	    Now only the items of (default) type "Item" (namely the       	    tweets) are plotted; the tweets of type "location" are not.
+	</td>
+	<td class="example">
+	  <div class="example">
+	    <div data-ex-role="view" data-ex-view-class="Map" 	   		 data-ex-latlng=".location.latlng" data-ex-zoom="16" 	   		 data-ex-center="30.044939,31.23680" >
+	      <div data-ex-role="lens">
+		<a class="hoverOver" 	     		   data-ex-href-content=".url"><div data-ex-content=".label"></div></a>
+		<b>Topics:</b> <span data-ex-content=".keywords"></span>
+		<br/><br/>
+	      </div>
+	    </div>
+
+	  </div>
+	</td>
+
+
+      </tr>
+
+      <tr>
+	<td>
+	  <h3>Wrap Up: Css</h3></td>
+      </tr>
+
+      <tr>
+	<td  class="narrative">
+	  We've now incorporated all the exhibit tags necessary for     our 	  final visualization.  It remains to nicely style the result using     	  CSS.  This is just a plain html page, so you can style it the usual     	  way.  Exhibit assigns specific classes to the various elements it     	  creates, and you can assign styles to those classes in order to style     	  the exhibit elements.  The easiest way to identify the styles is using     	  <a href="http://www.getfirebug.com">firebug</a> or some other DOM     	  inspection tool: render the page, then use "inspect element" to     	  identify the class that Exhibit has assigned to the rendered element.      	  As an example, the (default) list facets get a class of     	  "exhibit-facet", so we can style them to all float on the same row     	  using the following CSS:
+	  <pre>
+	    <code>
+	      &lt;style&gt;
+	      div.exhibit-facet {
+	      float: left;
+	      font-size: 15px;
+	      padding: 5px;
+	      position: relative;
+	      width: 170px;
+	      }
+	      &lt;/style&gt;
+	    </code>
+	  </pre>
+	  With this done (and more CSS) we produce our <a href="egypt.html" 							   							  target="result">final exhibit</a>.
+
+	</td>
+	<td class="example">
+	  <iframe width="100%" height="400px" src="egypt.html"></iframe>
+	</td>
+      </tr>
+      <tr>
+	<td><h3>Using Google Spreadsheets</h3></td>
+      </tr>
+      <tr>
+	<td  class="narrative">
+
+	  Exhibit can read its data directly out of a Google     	  spreadsheet.  Google spreadsheets are nice for shared editing and     	  dynamic updating, but they do tend to load more slowly than your own     	  static data file.  
+	  <p>
+	    If you want to use a Google Spreadsheet like this, you       	    need to <b>publish</b> it so Exhibit can access (but not edit) the       	    data.  To do so, click on the "File" menu and select "Publish to the       	    Web".  Click "start publishing", then, under "Get a link to the       	    published data", select "RSS".  Copy the resulting link, then change       	    the "alt=rss" at the end to "alt=json-in-script".  That will produce       	    the link you want.  For our example, for our Egypt Exhibit, you can       	    put the following link to the tweets spreadsheet in the head of the       	    document instead of the previous json or tsv link:
+	  <p>
+	    <code>
+	      &lt;link rel=&quot;exhibit/data&quot; 	      data-ex-converter=&quot;google-spreadsheets&quot; 	      type=&quot;application/jsonp&quot;<br> 	      href=&quot;https://spreadsheets.google.com/feeds/list/0AhAtARHyRN5adFBTczRpMktmS3BPU0lpRVBWenhCV3c/od6/public/basic?hl=en_US&amp;alt=json-in-script&quot;/&gt;
+	    </code>
+	    Similarly, you can use the following link to pull the location 	    data       from its Google Spreadsheet:
+	  <p>
+	    <code>
+	      &lt;link 	      href=&quot;https://spreadsheets.google.com/feeds/list/0AhAtARHyRN5adGZKTWstczJvNjEyU1JEUGdsd1UwZ0E/od6/public/basic?alt=json-in-script&quot; 	      rel=&quot;exhibit/data&quot; 	      data-ex-converter=&quot;google-spreadsheets&quot; 	      type=&quot;application/jsonp&quot;/&gt;
+	    </code>
+	  <p>
+	    Probably the biggest stumbling block for Google       	    Spreadsheets (or Excel) is dates (which we'll need for the timeline       	    later).  There are hundreds of ways to represent dates.  Exhibit       	    understands the "official standard" UTC representation of       	    year-month-day followed by hours:minutes:seconds, for example       	    1997-09-26 13:23:18.  So do spreadsheets, but they try to "help" you       	    by translating your dates into <b>their</b> standard format, e.g.       	    9/26/1997.  Even if you format the date properly, they'll change it       	    back under the hood.  And why you try to serve it as data for exhibit,       	    they'll serve the wrong format.  The best solution we've found is to       	    tell the spreadsheet that your dates are actually <b>text string</b>.        	    This may involve judicious copying of your data, pasting it as a       	    string, and invoking some concatenation functions.  
+	</td>
+	<td class="example">
+	  <a href="publishing-spreadsheet.jpg"        	     targer="result"><img src="publishing-spreadsheet.jpg" 				  width="100%"></a>
+	  <div>Click image to see full size.</div>
+	</td>
+
+      </tr>
+
+      <tr>
+	<td>
+	  <h3>Next Steps</h3>
+	</td>
+      </tr>
+
+      <tr>
+	<td class="narrative">
+	  As you build your own exhibits, you'll probably want to look     	  at a bunch of <b>examples</b>.  Remember, since these are just html     	  files, you can download them and they'll work; then you can start to     	  tweak them.  The <a href="http://simile-widgets.org/exhibit">Exhibit       	    web site</a> has a bunch of examples we've built.  We've also set up     	  an <a href="http://edwardbenson.com/viz/exhibits.html">exhibit of       	    exhibits</a> that other people have made, to give you an idea of what     	  can be done with the tool.  As you build your own, you'll probably     	  want to check the     	  <a href="http://simile-widgets.org/wiki/Reference_Documentation_for_Exhibit">Exhibit       	    reference documentation</a> which lists all the different exhibit tags     	  and the options you can set on them.  
+
+	  <p>
+	    If you don't like hand-editing html, we have projects under way 	    to       make authoring easier. Our       	    <a href="http://projects.csail.mit.edu/datapress">Datapress</a>       	    project provides a wordpress extension that lets you WYSIWYG edit your       	    exhibit into a blog post, and       	    <a href="http://projects.csail.mit.edu/exhibit/Dido">Dido</a> is a       	    (still experimental) standalong WYSIWYG editor for exhibits.
+	</td>
+      </tr>
+    </table>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,60 @@
+<html>
+  <head>
+
+    <title>Jan. 2: The Battle for Tahrir Square</title>
+    <script src="http://trunk.simile-widgets.org/exhibit/api/exhibit-api.js"></script>
+    <script src="http://trunk.simile-widgets.org/exhibit/api/extensions/time/time-extension.js"></script>
+    <script src="http://trunk.simile-widgets.org/exhibit/api/extensions/map/map-extension.js"></script>
+
+    <!-- <link href="sample.tsv" rel="exhibit/data" type="text/tsv"/> -->
+    <!-- <link href="schema.js" rel="exhibit/data" type="application/json"/> -->
+
+    <link href="egypt.js" rel="exhibit/data" type="application/json"/>
+
+<style>
+div.exhibit-facet {
+    float: left;
+    font-size: 15px;
+    padding: 5px;
+    position: relative;
+    width: 170px;
+}
+</style>
+
+  </head>
+  <body>
+    <h1>Feb. 2: The Battle for Tahrir Square</h1>
+    <!-- <h2></h2> -->
+
+
+    <div data-ex-role="lens">
+      <div data-ex-content=".label"></div>
+    </div>
+    
+    <div id="options-wrapper">
+      <div id="options">
+	<div class="mode" data-ex-role="facet" data-ex-expression=".location" data-ex-show-missing="false" data-ex-height="150px"></div>
+	<div class="mode" data-ex-role="facet" data-ex-expression=".gender" data-ex-show-missing="false" data-ex-height="150px"></div>
+	<div class="mode" data-ex-role="facet" data-ex-expression=".role" data-ex-show-missing="false" data-ex-height="150px"></div>
+	<div class="mode" data-ex-role="facet" data-ex-expression=".username" data-ex-show-missing="false" data-ex-height="150px"></div>
+	<div data-ex-role="facet" data-ex-facet-label="action" data-ex-expression=".action" data-ex-show-missing="false" data-ex-height="150px"></div>
+	<div data-ex-role="facet" data-ex-expression=".emotion" data-ex-show-missing="false"></div>	
+      </div>
+    </div>
+
+    <div id="secondRow">
+      <div id="cloud">
+	<p class="topics">Text:</p>
+	<div data-ex-role="facet" data-ex-facet-class="TextSearch"></div>
+	<p class="topics">Topics:</p>
+	<div data-ex-role="facet" data-ex-expression=".keywords" data-ex-facet-class="Cloud" data-ex-show-missing="false"></div>
+      </div>
+      <div id="maps">
+	<div data-ex-role="viewPanel">
+	  <div data-ex-role="view" data-ex-view-class="Timeline" data-ex-start=".time" data-ex-color-key=".username" data-ex-top-band-pixels-per-unit="70" data-ex-bottom-band-pixels-per-unit="400"></div>
+	  <div data-ex-role="view" data-ex-label="List" data-ex-orders=".hour" data-ex-possible-orders=".action,.data,.emotion,.gender,.hour,.location,.role,.username"></div>
+	</div>
+      </div>
+    </div>
+  </body>
+</html>

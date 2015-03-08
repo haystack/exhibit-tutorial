@@ -1,0 +1,31 @@
+<html>
+  <head>
+
+    <title>Jan. 2: The Battle for Tahrir Square</title>
+    <script src="http://api.simile-widgets.org/exhibit/HEAD/exhibit-api.js"></script>
+    <link rel="exhibit-extension" href="http://api.simile-widgets.org/exhibit/HEAD/extensions/map/map-extension.js"/>
+    <link rel="exhibit-extension" href="http://api.simile-widgets.org/exhibit/HEAD/extensions/time/time-extension.js"/>
+
+    <!-- <link href="sample.tsv" rel="exhibit/data" type="text/tsv"/> -->
+    <!-- <link href="schema.js" rel="exhibit/data" type="application/json"/> -->
+
+    <link rel="exhibit/data" data-ex-converter="googleSpreadsheets" type="application/jsonp" href="https://spreadsheets.google.com/feeds/list/0AhAtARHyRN5adFBTczRpMktmS3BPU0lpRVBWenhCV3c/od6/public/basic?hl=en_US&alt=json-in-script"/>
+
+
+  </head>
+  <body>
+    <h1>Feb. 2: The Battle for Tahrir Square</h1>
+    <!-- <h2></h2> -->
+
+
+    <div data-ex-role="lens">
+      <div data-ex-content=".label"></div>
+    </div>
+    
+
+    <div data-ex-role="viewPanel">
+      <div data-ex-role="view" data-ex-view-class="Timeline" data-ex-start=".time" data-ex-color-key=".username" data-ex-top-band-pixels-per-unit="70" data-ex-bottom-band-pixels-per-unit="400"></div>
+      <div data-ex-role="view" data-ex-label="List" data-ex-orders=".hour" data-ex-possible-orders=".action,.data,.emotion,.gender,.hour,.location,.role,.username"></div>
+    </div>
+  </body>
+</html>
