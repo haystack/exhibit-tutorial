@@ -2,32 +2,33 @@
 <html>
   <head>
     <title>CAR Hands-on: Simile Exhibit Framework</title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <script src="http://api.simile-widgets.org/exhibit/HEAD/exhibit-api.js"></script>
     <link rel="exhibit-extension" href="http://api.simile-widgets.org/exhibit/HEAD/extensions/map/map-extension.js"/>
     <link rel="exhibit-extension" href="http://api.simile-widgets.org/exhibit/HEAD/extensions/time/time-extension.js"/>
     <style>
       table#main { 
       border-spacing: 20px;
-      vertical-align:top;
+      vertical-align: top;
       }
       td.example {
-      vertical-align:top;
-      overflow:auto;
+      vertical-align: top;
+      overflow: auto;
       width: 75%;
       }
       td.narrative {
-      vertical-align:top;
+      vertical-align: top;
       }
       div.example {
-      height:500px;
-      overflow:auto;
+      height: 500px;
+      overflow: auto;
       }
       
     </style>
 
-    <link href="egypt.txt" data-ex-value-separator=";" rel="exhibit/data" 	  type="text/tsv"/>
+    <link href="egypt.txt" data-ex-value-separator=";" rel="exhibit-data" type="text/tsv"/>
 
-    <link href="locations.txt" rel="exhibit/data" type="text/tsv"/>
+    <link href="locations.txt" rel="exhibit-data" type="text/tsv"/>
   </head>
   <body>
     <H1>CAR Hand-on: Simile Exhibit Framework</H1>
@@ -104,7 +105,7 @@
 	  To begin using exhibit, you need to put a link to the 	  Exhibit library in the head of your html document:
 	  <p>
 	    <code>
-	      &lt;script 	      	      href=&quot;http://api.simile-widgets.org/exhibit/HEAD/exhibit-api.js&quot; 	      &gt;&lt;/script&gt;
+	      &lt;script src=&quot;http://api.simile-widgets.org/exhibit/HEAD/exhibit-api.js&quot;&gt;&lt;/script&gt;
 	    </code>
 	  <p>
 	    Right now, it won't do anything.
@@ -187,15 +188,16 @@
 	      &lt;link rel=&quot;exhibit/data&quot; 	      	      type=&quot;text/tsv&quot;  data-ex-value-separator=";" 	      	      href=&quot;egypt.txt&quot;/&gt;
 	    </code>
 	  <p>
-	    (The <code>ex:valueSeparator</code> tells Exhibit that
+	    (The <code>data-ex-value-separator</code> tells Exhibit that
 	    fields containing semicolons should be split into multiple
 	    values.  You can leave it out if you don't need to split
 	    fields.)  If you want to link to the json instead you can
 	    write:
 	  <p>
 	    <code>
-	      &lt;link rel=&quot;exhibit/data&quot; 	      	      type=&quot;text/tsv&quot;<br> href=&quot;egypt.txt&quot;/&gt;<br>
+	      &lt;link rel=&quot;exhibit-data&quot; href=&quot;egypt.js&quot;/&gt;<br>
 	    </code>
+            (no type specification here because json is the default for exhibit)
 	  <p>
 	    Either will do.  Note that you need to specify the format
 	    of the file as a "type" argument.  If you want to link
@@ -327,14 +329,14 @@
 	  Note that the list view has ordered the items alphabetically
 	  by tweet, i.e. label.  This is the default, and isn't so
 	  sensible in this case.  We can change the order by adding
-	  an <code>ex:orders</code> attribute to the view.  While
+	  an <code>data-ex-orders</code> attribute to the view.  While
 	  we're at it, we can also specify which properties of the
 	  data are useful for sorting
-	  using <code>ex:possibleOrders</code>:
+	  using <code>data-ex-possible-orders</code>:
 	  <p>
 
 	    <code>
-	      &lt;div data-ex-role=&quot;view&quot; 	      	      data-ex-label=&quot;-list&quot;
+	      &lt;div data-ex-role=&quot;view&quot; 	      	      data-ex-label=&quot;List&quot;
 	      data-ex-orders=&quot;.username,.hour&quot;
 	      data-ex-possible-orders=&quot;.action,.date,.emotion, 	      	      .gender,.hour,.location,.role,.username&quot;&gt;&lt;/div&gt;
 	    </code>
@@ -349,7 +351,7 @@
 	    Exhibit also lets you specify whether to group together
 	    items with the same value of the sort property under a
 	    common header---ties are grouped by default by you can
-	    override by adding the <code>ex:grouped="false"</code>
+	    override by adding the <code>data-ex-grouped="false"</code>
 	    attribute to the view.
 	  <p>
 	    Users can change the sort order and grouping by clicking
@@ -386,15 +388,15 @@
 	  <p>
 	    <code>
 	      &lt;div data-ex-role=&quot;view&quot;
-	      data-ex-view-class=&quot;-tabular&quot;
+	      data-ex-view-class=&quot;Tabular&quot;
 	      data-ex-columns=&quot;.username,.role,.location,.label&quot
-	      data-ex-column-labels="Who,Role,Where?,Tweet";&gt;&lt;/div&gt;
+ data-ex-column-labels="Who,Role,Where?,Tweet"&gt;&lt;/div&gt;
 	    </code>
 	  <p>
 	    For the tabular view, the key is specifying which columns
 	    to display using a comma separated list of property names
-	    in <code>ex:columns</code>.  Another
-	    option <code>ex:columnLabels</code>, lets you specify what
+	    in <code>data-ex-columns</code>.  Another
+	    option <code>data-ex-column-labels</code>, lets you specify what
 	    goes in the column headings.  There are many other options
 	    to let you style the different columns.
 	</td>
@@ -417,11 +419,11 @@
 	  Now let's place our items on a timeline.  To do that we need
 	  to specify which properties define the start (and optionally
 	  end) points of the timeline position of the item.  We do so
-	  by placing the attributes <code>ex:start</code> and
-	  (optionally) <code>ex:end</code> in the view description.
+	  by placing the attributes <code>data-ex-start</code> and
+	  (optionally) <code>data-ex-end</code> in the view description.
 	  We can also <code>color code</code> the marks on the
 	  timeline to reflect some categorization, by setting
-	  the <code>ex:colorKey</code> option.  Each of these options
+	  the <code>data-ex-color-key</code> option.  Each of these options
 	  expects the specification of a (period-prefixed) property
 	  name that should be used.  We can also configure other
 	  natural quantities like the the time-unit of the timeline
@@ -431,7 +433,7 @@
 	  <p>
 	    <code>
 	      &lt;div data-ex-role=&quot;view&quot;
-	      data-ex-view-class=&quot;-timeline&quot;
+	      data-ex-view-class=&quot;Timeline&quot;
 	      data-ex-start=&quot;.time&quot;
 	      data-ex-color-key=&quot;.username&quot;
 	      data-ex-top-band-unit=&quot;minute&quot;
@@ -500,7 +502,7 @@
 	    for switching among secondary views.  Note that in the
 	    view-switching header each view is named by its type.  If
 	    you have several views of the same type, or just want more
-	    informative names, you can add an <code>ex:label</code>
+	    informative names, you can add an <code>data-ex-label</code>
 	    attribute to each view that will override its name.
 	</td>
 	<td class="example">
@@ -550,27 +552,27 @@
 	    </code>
 	  <p>
 	    As usual, there are additional options.  Besides the
-	    obvious "height" of the facet, <code>ex:showMissing</code>
+	    obvious "height" of the facet, <code>data-ex-show-missing</code>
 	    specifies what to do about items that <i>don't have</i> a
 	    value for the property. When set to false, those items
 	    simply don't participate in the facet.  When set to true,
 	    the facet will include a selectable "missing this value"
 	    option.
 	  <p>
-	    Besides the default list facet, there as a textsearch
+	    Besides the default list facet, there is a text search
 	    facet that offers a textbox where the reader can type
 	    arbitrary text that is matched against the content of the
 	    items.
 	  <p>
 	    <code>
 	      &lt;div data-ex-role=&quot;facet&quot;
-	      data-ex-facet-class=&quot;-text-search&quot;&gt;&lt;/div&gt;
+	      data-ex-facet-class=&quot;TextSearch&quot;&gt;&lt;/div&gt;
 	    </code>
 	    There is also a TagCloud facet type that displays values
 	    in a tag cloud (larger ones are more common):
 	  <p>
 	    <code>
-	      &lt;div data-ex-role=&quot;facet&quot; 	      data-ex-expression=&quot;.keywords&quot; 	      data-ex-facet-class=&quot;-cloud&quot; 	      data-ex-show-missing=&quot;false&quot;&gt;&lt;/div&gt;
+	      &lt;div data-ex-role=&quot;facet&quot; 	      data-ex-expression=&quot;.keywords&quot; 	      data-ex-facet-class=&quot;Cloud&quot; 	      data-ex-show-missing=&quot;false&quot;&gt;&lt;/div&gt;
 	    </code>
 	  <p>
 	    For number-valued properties, there is a NumericRange
@@ -614,10 +616,10 @@
 	  head:
 	  <p>
 	    <code>
-	      &lt;script
-	      src=&quot;http;//api.simile-widgets.org/exhibit/HEAD/extensions/map/map-extension.js&quot;&gt;&lt;/script&gt;
+	      &lt;script 
+src=&quot;http://api.simile-widgets.org/exhibit/HEAD/extensions/map/map-extension.js&quot;&gt;&lt;/script&gt;
 	    </code>
-
+<p>
 	    For maps we need (at least) Latitude/Longitude data for
 	    each item we want to plot, and that isn't available in our
 	    data set.  The simplest approach is to add a new column to
@@ -641,6 +643,12 @@
 	      rel=&quot;exhibit/data&quot;
 	      type=&quot;text/tsv&quot;/&gt;
 	    </code>
+            <p>
+            or the spreadsheet:
+            <p>
+            <code>
+            &lt;a href=&quot;https://docs.google.com/spreadsheet/pub?key=0AhAtARHyRN5adGZKTWstczJvNjEyU1JEUGdsd1UwZ0E&output=html&quot;&gt;
+            </code>
 	</td>
 	<td class="example">
 	  <iframe src="https://docs.google.com/spreadsheet/pub?key=0AhAtARHyRN5adGZKTWstczJvNjEyU1JEUGdsd1UwZ0E&output=html"
@@ -655,9 +663,9 @@
 	  <p>
 	    <code>
 	      &lt;div data-ex-role=&quot;view&quot;
-	      data-ex-view-class=&quot;-map&quot;
+	      data-ex-view-class=&quot;Map&quot;
 	      data-ex-latlng=&quot;.location.latlng&quot;
-	      ex:zoom=&quot;16&quot;
+	      data-ex-zoom=&quot;16&quot;
 	      data-ex-center=&quot;30.044939,31.23680&quot;
 	      data-ex-top-band-pixels-per-unit=&quot;25px&quot;&gt;&lt;/div&gt;
 	    </code>
@@ -696,7 +704,7 @@
 	  <p>
 	    <code>
 	      &lt;div data-ex-role=&quot;collection&quot;
-	      data-ex-item-types=&quot;-item&quot;&gt;&lt;/div&gt;
+	      data-ex-item-types=&quot;Item&quot;&gt;&lt;/div&gt;
 	    </code>
 	  <p>
 	    Now only the items of (default) type "Item" (namely the
@@ -808,7 +816,7 @@
 	    serve it as data for exhibit, they'll serve the wrong
 	    format.  The best solution we've found is to tell the
 	    spreadsheet that your dates are actually <b>text
-	      string</b>.  This may involve judicious copying of your
+	      strings</b>.  This may involve judicious copying of your
 	    data, pasting it as a string, and invoking some
 	    concatenation functions.
 	</td>
